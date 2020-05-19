@@ -1,0 +1,63 @@
+# We will use this commands for processing our files with Hadoop
+
+#Start Hadoop service
+start-all.sh
+
+#Remove Directory
+hadoop fs -rm -R /home/Assignment2/
+
+#Create Directory
+hadoop fs -mkdir /home/Assignment2/
+
+#move data from local to Hadoop file system
+For Part 1, Part 2 and Part 3
+hdfs dfs -copyFromLocal ./gutenberg/ /home/Assignment2/
+
+For Part 4
+hdfs dfs -copyFromLocal /home/cse587/Assignment2/join_data /home/Assignment2/
+
+For Part 5
+hdfs dfs -copyFromLocal /home/cse587/Assignment2/KNNdata /home/Assignment2/
+
+#check if the file has been copied
+1) hdfs dfs -ls /home/Assignment2/gutenberg/
+2) hdfs dfs -ls /home/Assignment2/Joindata/
+3) hdfs dfs -ls /home/Assignment2/KNNdata/
+
+#if running with python need to use Streaming Library (Hadoop-streaming-3.1.2.jar) which is in location
+cd hadoop-3.1.2/share/hadoop/tools/lib/
+
+#to run the map reduce command
+hadoop jar /home/cse587/hadoop-3.1.2/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/cse587/Assignment2/mapper1.py -mapper "python mapper1.py" -file /home/cse587/Assignment2/reducer1.py -reducer "python reducer1.py" -input  /home/Assignment2/gutenberg/ -output /home/Assignment2/output1
+
+hadoop jar /home/cse587/hadoop-3.1.2/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/cse587/Assignment2/mapper2.py -mapper "python mapper2.py" -file /home/cse587/Assignment2/reducer2.py -reducer "python reducer2.py" -input  /home/Assignment2/gutenberg/ -output /home/Assignment2/output2
+
+hadoop jar /home/cse587/hadoop-3.1.2/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/cse587/Assignment2/mapper3.py -mapper "python mapper3.py" -file /home/cse587/Assignment2/reducer3.py -reducer "python reducer3.py" -input  /home/Assignment2/gutenberg/ -output /home/Assignment2/output3
+
+hadoop jar /home/cse587/hadoop-3.1.2/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/cse587/Assignment2/mapper4.py -mapper "python3 mapper4.py" -file /home/cse587/Assignment2/reducer4.py -reducer "python3 reducer4.py" -input  /home/Assignment2/join_data/ -output /home/Assignment2/output4
+
+hadoop jar /home/cse587/hadoop-3.1.2/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/cse587/Assignment2/mapper5.py -mapper "python mapper5.py" -file /home/cse587/Assignment2/reducer5.py -reducer "python reducer5.py" -input  /home/Assignment2/KNNdata/ -output /home/Assignment2/output5
+
+
+#to check the output file
+hdfs dfs -ls /home/Assignment2/output1/
+
+#to open the output file
+hdfs dfs -cat /home/Assignment2/output1/part-00000
+
+#copy the output file of HDFS from its file system to local fileystem 
+hdfs dfs -copyToLocal /home/Assignment2/output1/part-00000 ./Assignment2/output1.txt
+
+hdfs dfs -copyToLocal /home/Assignment2/output2/part-00000 ./Assignment2/output2.txt
+
+hdfs dfs -copyToLocal /home/Assignment2/output3/part-00000 ./Assignment2/output3.txt
+
+hdfs dfs -copyToLocal /home/Assignment2/output4/part-00000 ./Assignment2/output4.txt
+
+hdfs dfs -copyToLocal /home/Assignment2/output5/part-00000 ./Assignment2/output5.txt
+
+#check the file
+cat output1.txt
+
+#stooping the service
+stop-all.sh
